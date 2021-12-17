@@ -1,0 +1,13 @@
+#!/bin/sh
+
+. bin/variables
+
+# Stop running containers and remove images (-v parameter can be added to also remove volumes)
+${DOCKER_BIN_DIRECTORY}/compose/down --rmi all $@
+
+cd ${DOCKER_DIRECTORY}
+
+# Remove stopped containers
+docker-compose rm
+
+cd ${ARENA_DIRECTORY}

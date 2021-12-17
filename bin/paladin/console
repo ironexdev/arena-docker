@@ -1,0 +1,6 @@
+#!/bin/sh
+
+. bin/variables
+
+# Run Symfony Console command in paladin service
+${DOCKER_BIN_DIRECTORY}/paladin/run php src/console.php $@

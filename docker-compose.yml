@@ -1,0 +1,152 @@
+version: "3.9"
+
+services:
+  paladin:
+    build:
+      args:
+        APP_CONTEXT_PATH: $APP_CONTEXT_PATH
+        DOCKER_IMAGE_CONTEXT_PATH: $DOCKER_IMAGE_CONTEXT_PATH
+        GROUP_ID: $GROUP_ID
+        USER_ID: $USER_ID
+      context: $ARENA_DIRECTORY
+      dockerfile: $DOCKER_DIRECTORY/images/paladin/Dockerfile
+    container_name: arena_paladin
+    depends_on:
+      - mongo
+    environment:
+      ACCESS_CONTROL_ALLOW_CREDENTIALS: "true"
+      ACCESS_CONTROL_ALLOW_HEADERS: "Content-Type,X-XSRF-Token"
+      ACCESS_CONTROL_EXPOSE_HEADERS: "Content-Type,XSRF-Token,Set-Cookie"
+      ADMIN_EMAIL: "admin@arena.local"
+      CLIENT_URL: "http://arena.local"
+      DEBUG_LOG: /var/log/app.log
+      DEFAULT_LOCALE: "en_US"
+      ENVIRONMENT: "development"
+      ERROR_REPORTING: "true"
+      FORCE_HTTPS: "false"
+      INFO_EMAIL: "info@arena.local"
+      JWT_KEY: /run/secrets/arena_jwt_key
+      MAILER_HOST: "smtp.mailgun.org"
+      MAILER_PORT: "587"
+      MAILER_USER: postmaster@sandboxdc85f60c099b4ef28d752259b3a73dad.mailgun.org
+      MAILER_PASSWORD: /run/secrets/arena_mailer_password
+      MONGO_INITDB_DATABASE: "arena"
+      MONGO_PASSWORD_FILE: /run/secrets/arena_mongo_password
+      MONGO_PORT: "27017"
+      MONGO_HOST: "mongo"
+      MONGO_USER: "arena"
+      SITE_NAME: "Paladin"
+      REDIS_HOST: "redis"
+      REDIS_PORT: 6379
+    networks:
+      - external
+      - internal
+    secrets:
+      - arena_jwt_key
+      - arena_mailer_password
+      - arena_mongo_password
+    volumes:
+      - $APP_DIRECTORY:/home/dockeruser/paladin
+      - $DOCKER_DIRECTORY/images/paladin/php.ini:/usr/local/etc/php/php.ini
+      - $PALADIN_LOG_DIRECTORY:/var/log
+
+  http-proxy:
+    build:
+      args:
+        DOCKER_IMAGE_CONTEXT_PATH: $DOCKER_IMAGE_CONTEXT_PATH
+        GROUP_ID: $GROUP_ID
+        USER_ID: $USER_ID
+      context: $ARENA_DIRECTORY
+      dockerfile: $DOCKER_DIRECTORY/images/http-proxy/Dockerfile
+    container_name: arena_http-proxy
+    depends_on:
+      - mongo-express
+      - redis-admin
+    networks:
+      - external
+    ports:
+      - "80:80"
+    restart: unless-stopped
+    volumes:
+      - $DOCKER_DIRECTORY/images/http-proxy/default.conf:/etc/nginx/conf.d/default.conf
+      - $HTTP_PROXY_LOG_DIRECTORY:/var/log/nginx
+
+  mongo:
+    build:
+      args:
+        DOCKER_IMAGE_CONTEXT_PATH: $DOCKER_IMAGE_CONTEXT_PATH
+      context: $ARENA_DIRECTORY
+      dockerfile: $DOCKER_DIRECTORY/images/mongo/Dockerfile
+    container_name: arena_mongo
+    networks:
+      - internal
+    environment:
+      MONGO_INITDB_DATABASE: "arena"
+      MONGO_INITDB_ROOT_PASSWORD_FILE: /run/secrets/arena_mongo_root_password
+      MONGO_INITDB_ROOT_USERNAME: "root"
+      MONGO_PASSWORD_FILE: /run/secrets/arena_mongo_password
+      MONGO_USER: "arena"
+    secrets:
+      - arena_mongo_password
+      - arena_mongo_root_password
+    volumes:
+      - mongo:/data/db
+
+  mongo-express:
+    build:
+      args:
+        DOCKER_IMAGE_CONTEXT_PATH: $DOCKER_IMAGE_CONTEXT_PATH
+      context: $ARENA_DIRECTORY
+      dockerfile: $DOCKER_DIRECTORY/images/mongo-express/Dockerfile
+    container_name: arena_mongo-express
+    depends_on:
+      - mongo
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME: root
+      ME_CONFIG_MONGODB_ADMINPASSWORD_FILE: /run/secrets/arena_mongo_root_password
+      ME_CONFIG_MONGODB_SERVER: mongo
+    networks:
+      - external
+      - internal
+    restart: unless-stopped
+    secrets:
+      - arena_mongo_password
+      - arena_mongo_root_password
+
+  redis:
+    build:
+      context: $ARENA_DIRECTORY
+      dockerfile: $DOCKER_DIRECTORY/images/redis/Dockerfile
+    container_name: arena_redis
+    networks:
+      - internal
+
+  redis-admin:
+    build:
+      context: $ARENA_DIRECTORY
+      dockerfile: $DOCKER_DIRECTORY/images/redis-admin/Dockerfile
+    container_name: arena_redis-admin
+    depends_on:
+      - redis
+    environment:
+      REDIS_1_HOST: "redis"
+    networks:
+      - external
+      - internal
+
+networks:
+  internal:
+  external:
+
+secrets:
+  arena_jwt_key:
+    file: $DOCKER_SECRET_DIRECTORY/arena_jwt_key.txt
+  arena_mailer_password:
+    file: $DOCKER_SECRET_DIRECTORY/arena_mailer_password.txt
+  arena_mongo_password:
+    file: $DOCKER_SECRET_DIRECTORY/arena_mongo_password.txt
+  arena_mongo_root_password:
+    file: $DOCKER_SECRET_DIRECTORY/arena_mongo_root_password.txt
+
+volumes:
+  mongo:

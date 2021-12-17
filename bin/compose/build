@@ -1,0 +1,10 @@
+#!/bin/sh
+
+. bin/variables
+
+cd ${DOCKER_DIRECTORY}
+
+# Build images
+docker-compose build $@
+
+cd ${ARENA_DIRECTORY}

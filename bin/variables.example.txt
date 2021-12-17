@@ -1,0 +1,27 @@
+#!/bin/sh
+
+# User
+export USER_ID=$(id -u)
+export GROUP_ID=$(id -u)
+
+# Devstack
+export ARENA_DIRECTORY=$(pwd)
+
+# Docker
+export DOCKER_BIN_DIRECTORY=${ARENA_DIRECTORY}/bin/docker
+export DOCKER_DIRECTORY=${ARENA_DIRECTORY}/docker
+export DOCKER_SECRET_DIRECTORY=${DOCKER_DIRECTORY}/secrets
+export DOCKER_IMAGE_CONTEXT_PATH=docker/images # Used in Dockerfiles as relative path to the context (ARENA_DIRECTORY)
+
+# App
+export APP_CONTEXT_PATH=app # Used in Dockerfiles as relative path to the context (ARENA_DIRECTORY)
+export APP_DIRECTORY=${ARENA_DIRECTORY}/${APP_CONTEXT_PATH}
+export APP_GENERATED_DIRECTORY=${APP_DIRECTORY}/generated
+
+# Var
+export VAR_DIRECTORY=${DOCKER_DIRECTORY}/var
+
+# Logs
+export LOG_DIRECTORY=${VAR_DIRECTORY}/logs
+export PALADIN_LOG_DIRECTORY=${LOG_DIRECTORY}/paladin
+export HTTP_PROXY_LOG_DIRECTORY=${LOG_DIRECTORY}/http-proxy

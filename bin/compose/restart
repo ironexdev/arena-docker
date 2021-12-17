@@ -1,0 +1,10 @@
+#!/bin/sh
+
+. bin/variables
+
+cd ${DOCKER_DIRECTORY}
+
+# Restart containers
+docker-compose restart $@
+
+cd ${ARENA_DIRECTORY}
