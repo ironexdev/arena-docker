@@ -13,10 +13,10 @@ export DOCKER_DIRECTORY=${ARENA_DIRECTORY}/docker
 export DOCKER_SECRET_DIRECTORY=${DOCKER_DIRECTORY}/secrets
 export DOCKER_IMAGE_CONTEXT_PATH=docker/images # Used in Dockerfiles as relative path to the context (ARENA_DIRECTORY)
 
-# App
-export APP_CONTEXT_PATH=app # Used in Dockerfiles as relative path to the context (ARENA_DIRECTORY)
-export APP_DIRECTORY=${ARENA_DIRECTORY}/${APP_CONTEXT_PATH}
-export APP_GENERATED_DIRECTORY=${APP_DIRECTORY}/generated
+# Paladin
+export PALADIN_CONTEXT_PATH=paladin # Used in Dockerfiles as relative path to the context (ARENA_DIRECTORY)
+export PALADIN_DIRECTORY=${ARENA_DIRECTORY}/${PALADIN_CONTEXT_PATH}
+export PALADIN_GENERATED_DIRECTORY=${PALADIN_DIRECTORY}/generated
 
 # Var
 export VAR_DIRECTORY=${DOCKER_DIRECTORY}/var

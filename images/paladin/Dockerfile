@@ -1,7 +1,7 @@
 FROM php:8.0.10-fpm-alpine
 # FROM php:8.1.0-fpm-alpine3.15
 
-ARG APP_CONTEXT_PATH
+ARG PALADIN_CONTEXT_PATH
 ARG DOCKER_IMAGE_CONTEXT_PATH
 ARG GROUP_ID=1337
 ARG USER_ID=1337
@@ -10,7 +10,7 @@ RUN addgroup -g $GROUP_ID -S dockeruser
 
 RUN adduser -S -G dockeruser -u $USER_ID -s /bin/ash dockeruser
 
-COPY --chown=$USER_ID:$GROUP_ID $APP_CONTEXT_PATH /home/dockeruser/paladin
+COPY --chown=$USER_ID:$GROUP_ID $PALADIN_CONTEXT_PATH /home/dockeruser/paladin
 
 # PHP gd dependencies
 RUN apk add zlib-dev

@@ -4,7 +4,7 @@ services:
   paladin:
     build:
       args:
-        APP_CONTEXT_PATH: $APP_CONTEXT_PATH
+        PALADIN_CONTEXT_PATH: $PALADIN_CONTEXT_PATH
         DOCKER_IMAGE_CONTEXT_PATH: $DOCKER_IMAGE_CONTEXT_PATH
         GROUP_ID: $GROUP_ID
         USER_ID: $USER_ID
@@ -46,9 +46,27 @@ services:
       - arena_mailer_password
       - arena_mongo_password
     volumes:
-      - $APP_DIRECTORY:/home/dockeruser/paladin
+      - $PALADIN_DIRECTORY:/home/dockeruser/paladin
       - $DOCKER_DIRECTORY/images/paladin/php.ini:/usr/local/etc/php/php.ini
       - $PALADIN_LOG_DIRECTORY:/var/log
+
+  warrior:
+    build:
+      args:
+        PALADIN_CONTEXT_PATH: $PALADIN_CONTEXT_PATH
+        DOCKER_IMAGE_CONTEXT_PATH: $DOCKER_IMAGE_CONTEXT_PATH
+        GROUP_ID: $GROUP_ID
+        USER_ID: $USER_ID
+      context: $ARENA_DIRECTORY
+      dockerfile: $DOCKER_DIRECTORY/images/warrior/Dockerfile
+    container_name: arena_warrior
+    environment:
+      VUE_APP_API_URL: "http://api.arena.local"
+    networks:
+      - external
+      - internal
+    volumes:
+      - $WARRIOR_DIRECTORY:/home/dockeruser/warrior
 
   http-proxy:
     build:
