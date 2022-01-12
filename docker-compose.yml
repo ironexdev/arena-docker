@@ -18,17 +18,17 @@ services:
       ACCESS_CONTROL_ALLOW_HEADERS: "Content-Type,X-XSRF-Token"
       ACCESS_CONTROL_EXPOSE_HEADERS: "Content-Type,XSRF-Token,Set-Cookie"
       ADMIN_EMAIL: "admin@arena.local"
-      CLIENT_URL: "http://arena.local"
+      CLIENT_PROTOCOL: "http://"
+      CLIENT_DOMAIN: "arena.local"
       DEBUG_LOG: /var/log/app.log
       DEFAULT_LOCALE: "en_US"
       ENVIRONMENT: "development"
       ERROR_REPORTING: "true"
       FORCE_HTTPS: "false"
       INFO_EMAIL: "info@arena.local"
-      JWT_KEY: /run/secrets/arena_jwt_key
       MAILER_HOST: "smtp.mailgun.org"
       MAILER_PORT: "587"
-      MAILER_USER: postmaster@sandboxdc85f60c099b4ef28d752259b3a73dad.mailgun.org
+      MAILER_USER: "postmaster@sandboxdc85f60c099b4ef28d752259b3a73dad.mailgun.org"
       MAILER_PASSWORD: /run/secrets/arena_mailer_password
       MONGO_INITDB_DATABASE: "arena"
       MONGO_PASSWORD_FILE: /run/secrets/arena_mongo_password
@@ -42,7 +42,6 @@ services:
       - external
       - internal
     secrets:
-      - arena_jwt_key
       - arena_mailer_password
       - arena_mongo_password
     volumes:
@@ -61,7 +60,13 @@ services:
       dockerfile: $DOCKER_DIRECTORY/images/warrior/Dockerfile
     container_name: arena_warrior
     environment:
-      VUE_APP_API_URL: "http://api.arena.local"
+      VUE_APP_API_PROTOCOL: "http://"
+      VUE_APP_API_DOMAIN: "api.arena.local"
+      VUE_APP_PROTOCOL: "http://"
+      VUE_APP_DOMAIN: "arena.local"
+      VUE_APP_ENVIRONMENT: "development"
+      VUE_APP_LANGUAGE: "en"
+      VUE_APP_LOCALE: "en_US"
     networks:
       - external
       - internal
@@ -87,6 +92,7 @@ services:
     restart: unless-stopped
     volumes:
       - $DOCKER_DIRECTORY/images/http-proxy/default.conf:/etc/nginx/conf.d/default.conf
+      - $DOCKER_DIRECTORY/static:/home/dockeruser/static
       - $HTTP_PROXY_LOG_DIRECTORY:/var/log/nginx
 
   mongo:
@@ -157,8 +163,6 @@ networks:
   external:
 
 secrets:
-  arena_jwt_key:
-    file: $DOCKER_SECRET_DIRECTORY/arena_jwt_key.txt
   arena_mailer_password:
     file: $DOCKER_SECRET_DIRECTORY/arena_mailer_password.txt
   arena_mongo_password:

@@ -1,0 +1,23 @@
+<script>
+    sendRequest();
+    sendRequest();
+
+    function sendRequest() {
+        var http = new XMLHttpRequest();
+        const mutation = {
+            query: `mutation{createXsrfToken}`
+        };
+
+        http.open("POST", "http://api.arena.local/graphql", true);
+
+        http.setRequestHeader("Content-type", "application/json");
+
+        http.onreadystatechange = function () {
+            if (http.readyState === 4 && http.status === 200) {
+                console.log(http.response);
+            }
+        }
+
+        http.send(JSON.stringify(mutation));
+    }
+</script>

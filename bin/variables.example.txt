@@ -18,10 +18,14 @@ export PALADIN_CONTEXT_PATH=paladin # Used in Dockerfiles as relative path to th
 export PALADIN_DIRECTORY=${ARENA_DIRECTORY}/${PALADIN_CONTEXT_PATH}
 export PALADIN_GENERATED_DIRECTORY=${PALADIN_DIRECTORY}/generated
 
+# Warrior
+export WARRIOR_CONTEXT_PATH=warrior # Used in Dockerfiles as relative path to the context (ARENA_DIRECTORY)
+export WARRIOR_DIRECTORY=${ARENA_DIRECTORY}/${WARRIOR_CONTEXT_PATH}
+
 # Var
 export VAR_DIRECTORY=${DOCKER_DIRECTORY}/var
 
 # Logs
-export LOG_DIRECTORY=${VAR_DIRECTORY}/logs
+export LOG_DIRECTORY=${VAR_DIRECTORY}/log
 export PALADIN_LOG_DIRECTORY=${LOG_DIRECTORY}/paladin
 export HTTP_PROXY_LOG_DIRECTORY=${LOG_DIRECTORY}/http-proxy

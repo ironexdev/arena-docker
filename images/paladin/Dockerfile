@@ -62,16 +62,21 @@ RUN pecl install mongodb \
 COPY --chown=$USER_ID:$GROUP_ID $DOCKER_IMAGE_CONTEXT_PATH/paladin/php.ini /usr/local/etc/php/php.ini
 #COPY --chown=$USER_ID:$GROUP_ID $DOCKER_IMAGE_CONTEXT_PATH/paladin/www.conf /usr/local/etc/php-fpm.d/www.conf
 
-RUN touch /var/log/app.log && chown dockeruser /var/log/app.log && chmod 600 /var/log/app.log
-RUN touch /var/log/fpm-php.www.log && chown dockeruser /var/log/fpm-php.www.log && chmod 600 /var/log/fpm-php.www.log
+RUN touch /var/log/app.log
+RUN touch /var/log/fpm-php.www.log
+
+RUN chown -R dockeruser /var && chmod -R 755 /var
 
 # Composer
 RUN apk add composer
 
 WORKDIR /home/dockeruser/paladin
 
-RUN composer install
+# For production, using CMD here because of bind mounts
+# RUN composer install
 
 USER dockeruser
 
 EXPOSE 9000
+
+CMD ["sh", "-c", "composer install && php-fpm"]
