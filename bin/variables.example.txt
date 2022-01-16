@@ -16,7 +16,6 @@ export DOCKER_IMAGE_CONTEXT_PATH=docker/images # Used in Dockerfiles as relative
 # Paladin
 export PALADIN_CONTEXT_PATH=paladin # Used in Dockerfiles as relative path to the context (ARENA_DIRECTORY)
 export PALADIN_DIRECTORY=${ARENA_DIRECTORY}/${PALADIN_CONTEXT_PATH}
-export PALADIN_GENERATED_DIRECTORY=${PALADIN_DIRECTORY}/generated
 
 # Warrior
 export WARRIOR_CONTEXT_PATH=warrior # Used in Dockerfiles as relative path to the context (ARENA_DIRECTORY)
