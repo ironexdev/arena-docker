@@ -15,7 +15,7 @@ services:
       - mongo
     environment:
       ACCESS_CONTROL_ALLOW_CREDENTIALS: "true"
-      ACCESS_CONTROL_ALLOW_HEADERS: "Content-Type,X-XSRF-Token"
+      ACCESS_CONTROL_ALLOW_HEADERS: "Authorization,Content-Type,X-XSRF-Token"
       ACCESS_CONTROL_EXPOSE_HEADERS: "Content-Type,XSRF-Token,Set-Cookie"
       ADMIN_EMAIL: "admin@arena.local"
       CLIENT_PROTOCOL: "http://"
