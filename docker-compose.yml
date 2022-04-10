@@ -16,6 +16,7 @@ services:
     environment:
       ACCESS_CONTROL_ALLOW_CREDENTIALS: "true"
       ACCESS_CONTROL_ALLOW_HEADERS: "Authorization,Content-Type,X-XSRF-Token"
+      ACCESS_CONTROL_ALLOW_ORIGINS: "http://arena.local,http://localhost:8080"
       ACCESS_CONTROL_EXPOSE_HEADERS: "Content-Type,XSRF-Token,Set-Cookie"
       ADMIN_EMAIL: "admin@arena.local"
       CLIENT_PROTOCOL: "http://"
@@ -48,30 +49,6 @@ services:
       - $PALADIN_DIRECTORY:/home/dockeruser/paladin
       - $DOCKER_DIRECTORY/images/paladin/php.ini:/usr/local/etc/php/php.ini
       - $PALADIN_LOG_DIRECTORY:/var/log
-
-  warrior:
-    build:
-      args:
-        PALADIN_CONTEXT_PATH: $PALADIN_CONTEXT_PATH
-        DOCKER_IMAGE_CONTEXT_PATH: $DOCKER_IMAGE_CONTEXT_PATH
-        GROUP_ID: $GROUP_ID
-        USER_ID: $USER_ID
-      context: $ARENA_DIRECTORY
-      dockerfile: $DOCKER_DIRECTORY/images/warrior/Dockerfile
-    container_name: arena_warrior
-    environment:
-      VUE_APP_API_PROTOCOL: "http://"
-      VUE_APP_API_DOMAIN: "api.arena.local"
-      VUE_APP_PROTOCOL: "http://"
-      VUE_APP_DOMAIN: "arena.local"
-      VUE_APP_ENVIRONMENT: "development"
-      VUE_APP_LANGUAGE: "en"
-      VUE_APP_LOCALE: "en_US"
-    networks:
-      - external
-      - internal
-    volumes:
-      - $WARRIOR_DIRECTORY:/home/dockeruser/warrior
 
   http-proxy:
     build:
